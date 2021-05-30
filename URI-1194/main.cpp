@@ -8,7 +8,7 @@ void postfix(char* infix, char* prefix, int ii, int ij, int pi, int pj) {
     if(pi > pj || ii > ij)
         return;
 
-    char root = infix[ii]; // = A
+    char root = infix[ii];
 
     int p = pi;
 
@@ -16,8 +16,8 @@ void postfix(char* infix, char* prefix, int ii, int ij, int pi, int pj) {
         p++;
     }
 
-    i64 l = p - pi;
-    i64 r = pj - p;
+    i64 l = p - pi; // count of nodes left to root
+    i64 r = pj - p; // count of nodes right to root
 
     postfix(infix, prefix, ii+1, ii+l, pi, pi+l-1);
     postfix(infix, prefix, ii+l+1, ij, pj-r+1, pj);
@@ -32,7 +32,7 @@ int main() {
     scanf("%li\n", &t);
     while(t--) {
         i64 c;
-        
+
         scanf("%li ", &c);
         
         char infix[52]  = {'\0'};
