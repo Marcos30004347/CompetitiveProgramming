@@ -21,6 +21,7 @@ u64 split(u64 f, u64 t, string n)
 bool solve(u64 N, u64 V, u64 l, u64 r, u64 i, string* names, string* sells, u64** pos, u64 k) {
     if(i == V)
     {
+
         u64 vals[N+1];
 
         for(int j=0; j<=N; j++)
@@ -90,15 +91,17 @@ bool solve(u64 N, u64 V, u64 l, u64 r, u64 i, string* names, string* sells, u64*
         return false;
     }
 
+
     if(k == 0)
     {
         return solve(N, V, pos[i+1][N-1], pos[i+1][N], i+1, names, sells, pos, N-1);
     }
 
+
     u64 old_left = pos[i][k-1];
     u64 old_rigth = pos[i][k];
     
-    for(u64 right = l; right<r; right++)
+    for(u64 right = l; right < r; right++)
     {
         pos[i][k-1] = old_left;
         pos[i][k]   = right;
@@ -112,8 +115,109 @@ bool solve(u64 N, u64 V, u64 l, u64 r, u64 i, string* names, string* sells, u64*
     return false;
 }
 
+bool relatorio(u64 cum, u64 seller, u64 sellers_count, u64 product, u64 product_count, u64* pos, string* sells, string* names, u64** relat)
+{
+    if(product >= product_count)
+    {
+        u64 total_idx = seller;
+        string total = sells[total_idx];
+        for(int i=0; i<sellers_count; i++)
+        {
+            u64 val = 0;
+            for(int j=0; j<product_count; j++)
+            {
+                val+= relat[i][j];
+            }
 
+            if(val != split(0, sells[i].length(), sells[i]))
+                return false;
+        }
 
+        for(u64 i=1; i<=product_count; i++)
+            printf("P%lu ", i);
+        printf("Totals\n");
+        u64 bottom[product_count];
+
+        for(int i=0; i<product_count; i++)
+            bottom[i] = 0;
+
+        u64 total_sum = 0;
+
+        for(int i=0; i<sellers_count; i++)
+        {
+            printf("%s ", names[i].c_str());
+            for(int j=0; j<product_count; j++)
+            {
+                bottom[j] += relat[i][j];
+                printf("%lu ", relat[i][j]);
+            }
+            printf("%s\n", sells[i].c_str());
+        }
+
+        printf("TP ");
+        for(int j=0; j<product_count; j++)
+        {
+            total_sum += bottom[j];
+            printf("%lu ", bottom[j]);
+        }
+        printf("%lu\n", total_sum);
+        return true;
+    }
+    else if(seller >= sellers_count)
+    {
+        string total = sells[seller];
+        
+        for(u64 i=1; i<min((u64)5, total.length()); i++)
+        {
+
+            if(cum == split(0, i, total))
+            {
+                for(int i=0; i<sellers_count; i++)
+                    relat[i][product] = split(0, pos[i], sells[i]);
+
+                relat[sellers_count][product] = cum;
+
+                string tmp_sells[sellers_count+1];
+                u64 tmp_pos[sellers_count];
+                
+                for(int t=0; t<sellers_count; t++)
+                {
+                    tmp_sells[t] = sells[t].substr(pos[t], sells[t].length());
+                    tmp_pos[t] = 0;
+                }
+
+                tmp_sells[sellers_count] = total.substr(i, total.length());
+
+                if(relatorio(0, 0, sellers_count, product + 1, product_count, tmp_pos, tmp_sells, names, relat))
+                    return true;
+            }        
+        }
+
+        return false;
+    }
+    else
+    {
+        for(u64 i=1; i<min((u64)4, sells[seller].length()); i++)
+        {
+            pos[seller] = i;
+
+            if(relatorio(
+                cum + split(0, i, sells[seller]),
+                seller + 1,
+                sellers_count,
+                product,
+                product_count,
+                pos,
+                sells,
+                names,
+                relat
+            )) return true;
+        }
+
+    }
+
+    return false;
+}
 
 int main() {
     u64 C;
@@ -145,37 +249,17 @@ int main() {
             len[v] = strlen(tmp) - names[v].length();
         } while(names[v++] != "TP");
 
-        u64** pos;
-        pos = new u64*[5];
 
-        for(int i=0; i<v; i++) {
-            pos[i] = new u64[N+2];
-    
-            pos[i][0] = 0;
-            for(int j=1; j<=N; j++)
-                pos[i][j] = pos[i][j-1] + 1;
-            pos[i][N+1] = len[i];
-        }
+        u64* pos = new u64[5];
 
-        // for(int j=0; j<v-1; j++)
-        // {
-        //     for(int n=0; n<=N+1; n++)
-        //     {
-        //         printf("%lu ", pos[j][n]);
-        //     }
-        //     printf("\n");
-        // }
-    
-        solve(N+1, v-1, pos[0][N], pos[0][N+1], 0, names, sells, pos, N);
+        for(int i=0; i<5; i++)
+            pos[i] = 0;
+        
+        u64** rel = new u64*[v];
+        for(int i=0; i<v; i++)
+            rel[i] = new u64[N+1];
 
-        // printf("%s\n", header);
-
-        // for(int i=0; i<v; i++)
-        // {
-        //     printf("%s %lu\n", names[i], sells[i]);
-        // }
-
-        // printf("%lu\n", N-1);
+        relatorio(0, 0, v-1, 0, N, pos, sells, names, rel);
 
     }
     
