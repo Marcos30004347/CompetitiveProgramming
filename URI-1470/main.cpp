@@ -11,7 +11,6 @@ typedef long i64;
 
 #define INF 0xf3f3f3f3
 
-
 bool dobra(vector<u64> in, vector<u64> out)
 {
     if(in.size() < out.size())
@@ -28,8 +27,10 @@ bool dobra(vector<u64> in, vector<u64> out)
 
         for(int i=0; i<r-l; i++)
             tape.push_back(in[in.size() - i - 1]);
+
         for(int i=0; i<l-r; i++)
             tape.push_back(in[i]);
+
         for(int i=0; i<std::min(p, r); i++)
             tape.push_back(
                 in[p + std::min(p, r) - 1 - i] +
