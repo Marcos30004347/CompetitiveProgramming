@@ -204,17 +204,31 @@ int main() {
 
             for(u64 k=0; k<cycles_edges.size(); k++)
             {
-                u64 dist = INF;
+                u64 a = cycles_edges[k][1];
+                u64 b = cycles_edges[k][2];
+                if(Parent[b] == a)
+                {
+                    
+                }
+                else if(Parent[a] == b)
+                {
 
-                dist = 2*Distance[cycles_edges[k][1]] + CycleLength[cycles_edges[k][1]];
+                }
+                else 
+                {
 
-                if(CycleLength[cycles_edges[k][1]] >= length && min_dist > dist)
-                    min_dist = dist;
+                }
+                // u64 dist = INF;
 
-                dist = 2*Distance[cycles_edges[k][2]] + CycleLength[cycles_edges[k][2]];
+                // dist = 2*Distance[cycles_edges[k][1]] + CycleLength[cycles_edges[k][1]];
 
-                if(CycleLength[cycles_edges[k][2]] >= length && min_dist > dist)
-                    min_dist = dist;
+                // if(CycleLength[cycles_edges[k][1]] >= length && min_dist > dist)
+                //     min_dist = dist;
+
+                // dist = 2*Distance[cycles_edges[k][2]] + CycleLength[cycles_edges[k][2]];
+
+                // if(CycleLength[cycles_edges[k][2]] >= length && min_dist > dist)
+                //     min_dist = dist;
 
             }
 
