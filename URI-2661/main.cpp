@@ -1,58 +1,39 @@
-#include <iostream>
-#include <algorithm>
-#include <vector>
-#include <cmath>
-#include <string.h>
+#include <bits/stdc++.h>
 
 using namespace std;
 
 typedef double f64;
-typedef long unsigned u64;
+typedef long long unsigned u64;
 typedef long i64;
 
 #define INF 0xf3f3f3f3
 
-u64 fact(u64 i)
-{
-    if(i == 1 || i == 0)
-        return 1;
+int main(){
+    u64 n, k;
 
-    return fact(i-1)*i;
-}
+    std::set<int> divisores;
 
-u64 comb(u64 n, u64 k) {
-    return fact(n)/(fact(k)*fact(n-k));
-}
+    scanf("%llu\n", &n);
 
-int main() {
-    u64 N;
+    k = n;
 
-    scanf("%lu", &N);
-
-    u64 k = 0;
-    u64 s = sqrt(N) + 1;
-
-    for(i64 i = 2; i <= s; i++)
-    {
-        bool f = false;
-
-        while(N%i == 0 && N != 1)
-        {
-            f = true;
-            N = N/i;
+    for(u64 i=2; (i*i)<=n;){
+        if(k%i == 0){
+            k = k/i;
+            divisores.insert(i);
+        } else {
+            i++;
         }
-        
-        if(f) k++;
     }
 
-    if(N != 1)
-        k++;
+    if(k!=1){
+        divisores.insert(k);
+    }
+
+    u64 x = divisores.size();
+    u64 despojados = (u64)(pow(2, x)  - x - 1);
     
-    u64 r = 0;
+    printf("%llu\n", despojados);
 
-    for(int i=2; i<=k; i++)
-        r += comb(k, i);
-
-    std::cout << r << std::endl;
     return 0;
 }
