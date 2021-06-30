@@ -206,6 +206,9 @@ int main() {
             {
                 u64 a = cycles_edges[k][1];
                 u64 b = cycles_edges[k][2];
+                
+                u64 dist = INF;
+
                 if(Parent[b] == a)
                 {
                     

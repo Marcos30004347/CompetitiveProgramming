@@ -13,9 +13,12 @@ typedef long i64;
 
 #define INF 0xf3f3f3f3
 
-u64 split(u64 f, u64 t, string n)
+i64 split(u64 f, u64 t, string n)
 {
-    return (u64)atoll(n.substr(f, t-f).c_str());
+    if(n[f] == '0' && atoll(n.substr(f, t-f).c_str()) != 0)
+        return INF;
+    
+    return atoll(n.substr(f, t-f).c_str());
 }
 
 bool solve(u64 N, u64 V, u64 l, u64 r, u64 i, string* names, string* sells, u64** pos, u64 k) {
@@ -166,8 +169,7 @@ bool relatorio(u64 cum, u64 seller, u64 sellers_count, u64 product, u64 product_
     else if(seller >= sellers_count)
     {
         string total = sells[seller];
-        
-        for(u64 i=1; i<min((u64)5, total.length()); i++)
+        for(u64 i=1; i<std::min((std::size_t)5, total.length()); i++)
         {
 
             if(cum == split(0, i, total))
@@ -197,8 +199,17 @@ bool relatorio(u64 cum, u64 seller, u64 sellers_count, u64 product, u64 product_
     }
     else
     {
-        for(u64 i=1; i<min((u64)4, sells[seller].length()); i++)
+
+        for(u64 i=1; i<std::min((std::size_t)4, sells[seller].length()); i++)
         {
+
+            // std::cout << "sells: " << sells[seller] << std::endl;
+            // if(sells[seller][i] == '0' && split(0, i, sells[seller]) != 0)
+            //     continue;
+            // while(sells[seller][i] == '0' && split(0, i, sells[seller]) != 0) {
+            //     i++;
+            // }
+
             pos[seller] = i;
 
             if(relatorio(
